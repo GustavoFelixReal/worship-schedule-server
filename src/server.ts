@@ -1,6 +1,5 @@
 import { serverHttp } from "./http";
-import "./websocket";
 import "./database";
-
+import "./websocket";
 
 serverHttp.listen(4001, () => console.log("Server is running on PORT 4001"));

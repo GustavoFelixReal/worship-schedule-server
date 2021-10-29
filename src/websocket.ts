@@ -1,27 +1,37 @@
 import { io } from "./http";
 
-const Users = require("../db/models/users");
-
-let interval;
 
 io.on('connection', socket => {
-  console.log('New client connected');
+  console.log(`New client connected. Id: ${socket.id}`);
 
-  if (interval) {
-    clearInterval(interval);
-  }
+  socket.on('teste', data => {
+    console.log(data)
 
-  interval = setInterval(() => getApiAndEmit(socket), 1000);
+    io.emit('teste', { notification: data.notification });
+  })
 
-  socket.on('disconnet', () => {
-    console.log("Client disconnected");
-    clearInterval(interval);
-  });
+
+  // socket.on('disconnet', () => {
+  //   console.log(`Client disconnected.  Id: ${socket.id}`);
+  //   clearInterval(interval);
+  // });
 });
 
-const getApiAndEmit = async (socket) => {
-  const users = await Users.findAll();
+// const getSchedules = async (socket) => {
+//   const schedules = await Schedules.findAll();
 
-  const response = { date: new Date().getTime(), users };
-  socket.emit('FromApi', response);
-};
+//   socket.emit('Schedules', schedules);
+// };
+
+// const getApiAndEmit = async (socket) => {
+//   try {
+//     const response = { date: new Date().getTime() };
+//     socket.emit('FromApi', response);
+
+//     socket.on('error', () => {
+//       socket.emit('FromApi', { date: new Date() });
+//     });
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
