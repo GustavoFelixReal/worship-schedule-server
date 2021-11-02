@@ -3,12 +3,20 @@ import User from "./models/User";
 
 const passport = require("passport");
 
-initializePassport(passport, async (userName) => {
-  const user = await User.findOne({
-    where: { userName },
-  });
+initializePassport(passport, 
+  async (userName) => {
+    const user = await User.findOne({
+      where: { userName },
+    });
 
-  console.log(user);
+    return user;
+  },
 
-  return user;
-});
+  async (id) => {
+    const user = await User.findByPk(id);
+
+    console.log(id, user)
+
+    return user;
+  }
+);
