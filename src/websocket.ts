@@ -1,5 +1,6 @@
 import { io } from "./http";
 
+import ScheduleController from "./controllers/ScheduleController";
 
 io.on('connection', socket => {
   console.log(`New client connected. Id: ${socket.id}`);
@@ -8,7 +9,13 @@ io.on('connection', socket => {
     console.log(data)
 
     io.emit('teste', { notification: data.notification });
-  })
+  });
+
+  socket.on('get_schedules', data => ScheduleController.index(data, socket, io))
+
+  socket.on('create_schedule', data => ScheduleController.store(data, socket, io));
+
+  //socket.on('')
 
 
   // socket.on('disconnet', () => {

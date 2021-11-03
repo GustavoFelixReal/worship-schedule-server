@@ -11,33 +11,23 @@ const router = express.Router();
 // };
 
 router.get("/", (req, res) => {
-  res.send({ response: "I am alive!" }).status(200);
+  res.status(200).json({ response: "I am alive!" });
 });
 
 router.post('/login', passport.authenticate('local', {
   failureFlash: true
-}))
+}));
 
+/** Churches **/
 router.get('/churches', ChurchController.index);
 router.post('/churches', ChurchController.store);
 
+
+/** Users **/
 router.get('/churches/:churchId/users', UserController.index);
-router.get('/churches/:churchId/users/:userId', UserController.find)
+router.get('/churches/:churchId/users/:userId', UserController.find);
 router.post('/churches/:churchId/users', UserController.store);
 
-// router.post("/login", cors(), (req, res) => {
-
-//   passport.use(new LocalStrategy((userName, password, done) => {
-//     Users.findOne({ userName }, (error, user) => {
-//       if (error) return done(error);
-
-//       if (!user) {
-//         return done(null, false, { message: "Incorrect username." });
-//       }
-
-//       console.log(user);
-//     });
-//   }));
-// });
+/** Users **/
 
 module.exports = router;

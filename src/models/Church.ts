@@ -11,5 +11,6 @@ export default class Church extends Model {
 
   static associate(models) {
     this.hasMany(models.User, { foreignKey: 'churchId',  as: 'users' });
+    this.hasMany(models.Schedule, { foreignKey: 'churchId',  as: 'schedules' });
   }
 }
