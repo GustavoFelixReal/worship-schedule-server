@@ -41,9 +41,9 @@ export default {
       return res.status(406).json(err.errors);
     }
 
-    const { name, userName, email, password, churchId } = req.body;
-
     try {
+      const { name, userName, email, password, churchId } = req.body;
+
       const user = await User.create({
         name,
         userName,
@@ -69,9 +69,9 @@ export default {
       res.status(406).json(err.errors);
     }
 
-    const { churchId, userId } = req.params;
-    
     try {
+      const { churchId, userId } = req.params;
+
       const user = await User.findByPk(userId, { 
         where: { 
           churchId: churchId, 
