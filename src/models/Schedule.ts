@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
 
 export default class Schedule extends Model {
-  public allStatus = ['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED', 'COMPLETED'];
+  public allStatus = ['PENDING', 'APPROVED', 'REJECTED', 'CANCELED', 'COMPLETED'];
 
   static init(sequelize) {
     super.init({
@@ -18,7 +18,10 @@ export default class Schedule extends Model {
 
   static associate(models) {
     this.belongsTo(models.Church, { foreignKey: 'churchId', as: 'organization' });
+    
     this.belongsTo(models.User, { foreignKey: 'createdBy', as: 'author' });
     this.belongsTo(models.User, { foreignKey: 'updatedBy', as: 'maintainer' });
+
+    this.hasMany(models.ScheduleItem, { foreignKey: 'scheduleId', as: 'scheduleItem' });
   }
 }

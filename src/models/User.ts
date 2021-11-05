@@ -14,7 +14,11 @@ export default class User extends Model {
 
   static associate(models) {
     this.belongsTo(models.Church, { foreignKey: 'churchId', as: 'organization' });
-    this.hasMany(models.Schedule, { foreignKey: 'createdBy',  as: 'createdSchedules' });
-    this.hasMany(models.Schedule, { foreignKey: 'updatedBy',  as: 'updatedSchedules' });
+    
+    this.hasMany(models.Schedule, { foreignKey: 'createdBy',  as: 'createdSchedule' });
+    this.hasMany(models.Schedule, { foreignKey: 'updatedBy',  as: 'updatedSchedule' });
+
+    this.hasMany(models.ScheduleItem, { foreignKey: 'createdBy',  as: 'createdScheduleItem' });
+    this.hasMany(models.ScheduleItem, { foreignKey: 'updatedBy',  as: 'updatedScheduleItem' });
   }
 }

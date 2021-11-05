@@ -19,10 +19,25 @@ export default {
 
       socket.join(churchId);
 
-      const schedules = await Schedule.findAll({ where: { churchId } });
+      const schedules = await Schedule.findAll({ 
+        where: { churchId },
+        include: [
+          { association: 'author', 
+            attributes: { 
+              exclude: ['password'] 
+            } 
+          },
+          { association: 'maintainer', 
+            attributes: { 
+              exclude: ['password'] 
+            } 
+          }
+        ],
+      });
 
-      callback({ schedules });
+      return callback({ schedules });
     } catch (err) {
+      console.log(err)
       return socket.emit('exception', { errors: [err]});
     }
   },
@@ -50,7 +65,7 @@ export default {
         updatedBy: userId,
       });
 
-      io.to(churchId).emit('schedule', { schedule });
+      return io.to(churchId).emit('schedule', { schedule });
     } catch (err) {
       return socket.emit('exception', { errors: [err]});
     }
