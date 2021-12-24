@@ -10,7 +10,7 @@ export default {
         scheduleId: Yup.number().required(),
       });
 
-      await schema.validate(data.params);
+      await schema.validate(data.params, { abortEarly: false });
     } catch (err) {
       return socket.emit('exception', { errors: err.errors });
     }
@@ -19,7 +19,7 @@ export default {
       const { scheduleId } = data.params;
 
       const scheduleItems = ScheduleItem.findAll({ 
-        where: { scheduleId },
+        where: { scheduleId, deleted: false },
         include: [
           { association: 'author', 
             attributes: { 
@@ -32,6 +32,7 @@ export default {
             } 
           }
         ],
+        orderBy: 'order'
       });
 
       return callback({ scheduleItems });
@@ -41,6 +42,38 @@ export default {
   },
 
   async store(data, socket, io) {
-    
+    try {
+      const schema = Yup.object().shape({
+        churchId: Yup.number().required(),
+        scheduleId: Yup.number().required(),
+        userId: Yup.number().required(),
+        type: Yup.string().required(),
+        name: Yup.string().required(),
+        order: Yup.number().required(),
+        fileName: Yup.string().required()
+      });
+
+      await schema.validate(data.params, { abortEarly: false });
+    } catch (err) {
+      return socket.emit('exception', { errors: err.errors });
+    }
+
+    try {
+      const { churchId, scheduleId, userId, type, name, order, fileName } = data.params;
+
+      const scheduleItem = ScheduleItem.create({ 
+        scheduleId, 
+        type, 
+        name, 
+        order, 
+        fileName,
+        createdBy: userId,
+        updatedBy: userId
+      });
+
+      io.to(churchId).emit(`schedule_item_${scheduleId}`, { scheduleItem });
+    } catch (err) {
+      return socket.emit('exception', { errors: [err]});
+    }
   }
 };

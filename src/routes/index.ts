@@ -1,5 +1,6 @@
 import ChurchController from '../controllers/ChurchController';
 import UserController from '../controllers/UserController';
+import ScheduleController from '../controllers/ScheduleController';
 
 import express from 'express';
 import cors from 'cors';
@@ -28,6 +29,7 @@ router.get('/churches/:churchId/users', UserController.index);
 router.get('/churches/:churchId/users/:userId', UserController.find);
 router.post('/churches/:churchId/users', UserController.store);
 
-/** Users **/
+/** Schedules **/
+router.get('/churches/:churchId/schedules/:scheduleId', ScheduleController.find)
 
 module.exports = router;

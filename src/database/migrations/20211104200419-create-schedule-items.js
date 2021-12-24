@@ -66,7 +66,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface, _) => {
     return queryInterface.dropTable('Schedule_Items');
   }
 };

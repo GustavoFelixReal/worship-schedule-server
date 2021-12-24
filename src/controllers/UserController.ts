@@ -22,7 +22,7 @@ export default {
 
       return res.status(200).json(users);
     } catch (err) {
-      return res.status(500).json(err.errors.map(err => err.message));
+      return res.status(500).json({ error: "Server error" });
     }
   },
 
@@ -54,7 +54,7 @@ export default {
 
       return res.status(200).json(user);
     } catch (err) {
-      return res.status(500).json(err.errors.map(err => err.message));
+      return res.status(500).json({ error: "Server error" });
     }
   },
 
@@ -72,10 +72,10 @@ export default {
     try {
       const { churchId, userId } = req.params;
 
-      const user = await User.findByPk(userId, { 
+      const user = await User.findOne({ 
         where: { 
-          churchId: churchId, 
-          userId: userId 
+          id: userId,
+          churchId: churchId
         }, 
         attributes: { exclude: ['password'] }
       });
@@ -86,7 +86,7 @@ export default {
 
       return res.status(200).json(user);
     } catch (err) {
-      return res.status(500).json(err.errors.map(err => err.message));
+      return res.status(500).json({ error: "Server error" });
     }
   },
 };

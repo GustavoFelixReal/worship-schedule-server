@@ -37,7 +37,6 @@ export default {
 
       return callback({ schedules });
     } catch (err) {
-      console.log(err)
       return socket.emit('exception', { errors: [err]});
     }
   },
@@ -47,7 +46,8 @@ export default {
       const schema = Yup.object().shape({
         churchId: Yup.number().required(),
         name: Yup.string().required().max(255),
-        userId: Yup.number().required()
+        userId: Yup.number().required(),
+        date: Yup.date().required()
       });
 
       await schema.validate(data.params, { abortEarly: false });
@@ -71,7 +71,35 @@ export default {
     }
   },
 
-  async find(data) {
+  async find(req, res) {
+    try {
+      const schema = Yup.object().shape({
+        scheduleId: Yup.number().required(),
+        churchId: Yup.number().required(),
+      });
 
+      await schema.validate(req.params, { abortEarly: false });
+    } catch (err) {
+      return res.status(406).json(err.errors);
+    }
+
+    try {
+      const { scheduleId, churchId } = req.params;
+
+      const schedule = await Schedule.findOne({ 
+        where: {
+          id: scheduleId,
+          churchId: churchId
+        },
+      });
+
+      if (!schedule) {
+        return res.status(404).json({ error: "Schedule not found" });
+      }
+
+      return res.status(200).json(schedule);
+    } catch (err) {
+      return res.status(500).json({ error: "Server error" });
+    }
   },
 };
