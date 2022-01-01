@@ -56,11 +56,12 @@ export default {
     }
   
     try {
-      const { churchId, name, userId } = data.params;
+      const { churchId, name, userId, date } = data.params;
 
       const schedule = await Schedule.create({ 
         churchId,
         name,
+        date,
         createdBy: userId,
         updatedBy: userId,
       });
@@ -91,13 +92,25 @@ export default {
           id: scheduleId,
           churchId: churchId
         },
+        include: [
+          { association: 'author', 
+            attributes: { 
+              exclude: ['password'] 
+            } 
+          },
+          { association: 'maintainer', 
+            attributes: { 
+              exclude: ['password'] 
+            } 
+          }
+        ],
       });
 
       if (!schedule) {
         return res.status(404).json({ error: "Schedule not found" });
       }
 
-      return res.status(200).json(schedule);
+      return res.status(200).json({ schedule });
     } catch (err) {
       return res.status(500).json({ error: "Server error" });
     }

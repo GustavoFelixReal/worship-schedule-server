@@ -15,9 +15,9 @@ router.get("/", (req, res) => {
   res.status(200).json({ response: "I am alive!" });
 });
 
-router.post('/login', passport.authenticate('local', {
-  failureFlash: true
-}));
+// router.post('/login', passport.authenticate('local', {
+//   failureFlash: true
+// }));
 
 /** Churches **/
 router.get('/churches', ChurchController.index);

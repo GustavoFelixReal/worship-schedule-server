@@ -7,6 +7,7 @@ export default class Schedule extends Model {
     super.init({
       churchId: DataTypes.INTEGER,
       name: DataTypes.STRING,
+      date: DataTypes.DATE,
       status: DataTypes.STRING,
       createdAt: DataTypes.DATE,
       createdBy: DataTypes.INTEGER,

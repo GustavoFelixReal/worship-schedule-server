@@ -11,14 +11,14 @@ const passport = require('passport');
 
 process.env.NODE_ENV !== "production" && require('dotenv').config();
 
-app.use(flash());
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-}));
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(flash());
+// app.use(session({
+//   secret: process.env.SESSION_SECRET,
+//   resave: false,
+//   saveUninitialized: false,
+// }));
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.use(express.json());
 app.use(index);

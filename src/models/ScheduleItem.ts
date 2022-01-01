@@ -2,6 +2,7 @@ const { Model, DataTypes } = require('sequelize');
 
 export default class ScheduleItem extends Model {
   public allStatus = ['PENDING', 'APPROVED', 'REJECTED', 'CANCELED', 'COMPLETED', 'IN_PROGRESS'];
+  public allTypes = ['FILE', 'SEGMENT', 'SONG', 'VIDEO']
 
   static init(sequelize) {
     super.init({
