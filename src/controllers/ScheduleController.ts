@@ -1,6 +1,6 @@
 import Schedule from "../models/Schedule";
 
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
 export default {
   async index(data, callback, socket, io) {
@@ -11,7 +11,7 @@ export default {
 
       await schema.validate(data.params, { abortEarly: false });
     } catch (err) {
-      return socket.emit('exception', { errors: err.errors });
+      return socket.emit("exception", { errors: err.errors });
     }
 
     try {
@@ -19,25 +19,27 @@ export default {
 
       socket.join(churchId);
 
-      const schedules = await Schedule.findAll({ 
+      const schedules = await Schedule.findAll({
         where: { churchId },
         include: [
-          { association: 'author', 
-            attributes: { 
-              exclude: ['password'] 
-            } 
+          {
+            association: "author",
+            attributes: {
+              exclude: ["password"],
+            },
           },
-          { association: 'maintainer', 
-            attributes: { 
-              exclude: ['password'] 
-            } 
-          }
+          {
+            association: "maintainer",
+            attributes: {
+              exclude: ["password"],
+            },
+          },
         ],
       });
 
       return callback({ schedules });
     } catch (err) {
-      return socket.emit('exception', { errors: [err]});
+      return socket.emit("exception", { errors: [err] });
     }
   },
 
@@ -47,18 +49,18 @@ export default {
         churchId: Yup.number().required(),
         name: Yup.string().required().max(255),
         userId: Yup.number().required(),
-        date: Yup.date().required()
+        date: Yup.date().required(),
       });
 
       await schema.validate(data.params, { abortEarly: false });
     } catch (err) {
-      return socket.emit('exception', { errors: err.errors });
+      return socket.emit("exception", { errors: err.errors });
     }
-  
+
     try {
       const { churchId, name, userId, date } = data.params;
 
-      const schedule = await Schedule.create({ 
+      const schedule = await Schedule.create({
         churchId,
         name,
         date,
@@ -66,9 +68,11 @@ export default {
         updatedBy: userId,
       });
 
-      return io.to(churchId).emit('schedule', { schedule });
+      return io.to(churchId).emit("schedule", {
+        schedule,
+      });
     } catch (err) {
-      return socket.emit('exception', { errors: [err]});
+      return socket.emit("exception", { errors: [err] });
     }
   },
 
@@ -87,22 +91,24 @@ export default {
     try {
       const { scheduleId, churchId } = req.params;
 
-      const schedule = await Schedule.findOne({ 
+      const schedule = await Schedule.findOne({
         where: {
           id: scheduleId,
-          churchId: churchId
+          churchId: churchId,
         },
         include: [
-          { association: 'author', 
-            attributes: { 
-              exclude: ['password'] 
-            } 
+          {
+            association: "author",
+            attributes: {
+              exclude: ["password"],
+            },
           },
-          { association: 'maintainer', 
-            attributes: { 
-              exclude: ['password'] 
-            } 
-          }
+          {
+            association: "maintainer",
+            attributes: {
+              exclude: ["password"],
+            },
+          },
         ],
       });
 
@@ -115,4 +121,24 @@ export default {
       return res.status(500).json({ error: "Server error" });
     }
   },
+
+  async changeStatus(req, res) {
+    try {
+      const schema = Yup.object().shape({
+        scheduleId: Yup.number().required(),
+        churchId: Yup.number().required(),
+        status: Yup.string().required().oneOf(Schedule.allStatus)
+      })
+
+      await schema.validate(req.params, { abortEarly: false });
+    } catch (err) {
+      return res.status(406).json(err.errors);
+    }
+
+    try {
+
+    } catch (err) {
+      
+    }
+  }
 };
